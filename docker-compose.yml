@@ -1,1 +1,20 @@
+version: "3.3"
 
+services:
+  biz_service:
+
+  analytics_service:
+
+  auth_service:
+
+  document_service:
+
+  frontend_service:
+
+  database:
+
+  redis_cache:
+
+  kafka_service:
+
+networks:
