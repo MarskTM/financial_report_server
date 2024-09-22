@@ -17,4 +17,6 @@ services:
 
   kafka_service:
 
+  etcd_servivce:
+
 networks:
