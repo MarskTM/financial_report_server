@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/MarskTM/financial_report_server/baselib/server"
+	"github.com/MarskTM/financial_report_server/infrastructure/server"
 	"github.com/MarskTM/financial_report_server/services/gateway/internal"
 )
 

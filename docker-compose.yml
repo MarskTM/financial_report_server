@@ -1,22 +1,69 @@
 version: "3.3"
 
 services:
+  # Services layer
   biz_service:
+    depends_on:
+      - analytics_service
+      - auth_service
+      - document_service
+    networks:
+      - financial_report_backend
 
   analytics_service:
+    depends_on:
+      - database
+      - redis_cache
+      - kafka_service
+      - etcd_servivce
+    networks:
+      - financial_report_backend
 
   auth_service:
+    depends_on:
+      - database
+      - redis_cache
+      - kafka_service
+      - etcd_servivce
+    networks:
+      - financial_report_backend
 
   document_service:
+    depends_on:
+      - database
+      - redis_cache
+      - kafka_service
+      - etcd_servivce
+    networks:
+      - financial_report_backend
 
-  frontend_service:
+  gateway_service:
+    depends_on:
+      - etcd_servivce
+      - kafka_service
+      - auth_service
+      - biz_service
+    networks:
+      - financial_report_backend
 
+  # Infrastructure layer
   database:
+    networks:
+      - financial_report_backend
 
   redis_cache:
+    networks:
+      - financial_report_backend
 
   kafka_service:
+    networks:
+      - financial_report_frontend
+      - financial_report_backend
 
   etcd_servivce:
+    networks:
+      - financial_report_backend
 
 networks:
+  financial_report_backend:
+    driver: bridge

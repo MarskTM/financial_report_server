@@ -1,4 +1,6 @@
-package postgre_sql
+package config
+
+import ()
 
 type PostConfig struct {
 		

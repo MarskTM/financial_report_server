@@ -1,12 +1,14 @@
 package config
 
-import "github.com/MarskTM/financial_report_server/baselib/database/postgre_sql"
+import (
+	"github.com/MarskTM/financial_report_server/infrastructure/database/config"
+)
 
 // ----------------------------------------------------------------------------
 // config models
 type ConfigService struct {
-	Gateway  GatewayConfig          `json:"gateway"`
-	DBConfig postgre_sql.PostConfig `json:"dbconfig"`
+	Gateway  GatewayConfig     `json:"gateway"`
+	DBConfig config.PostConfig `json:"dbconfig"`
 }
 
 type GatewayConfig struct {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/MarskTM/financial_report_server/baselib/server"
+	"github.com/MarskTM/financial_report_server/infrastructure/server"
 	"github.com/MarskTM/financial_report_server/services/gateway/internal/config"
 	"github.com/MarskTM/financial_report_server/services/gateway/internal/rpc"
 	"github.com/golang/glog"
@@ -47,11 +47,11 @@ func (s *GatewayService) Install() error {
 
 func (s *GatewayService) Start() {
 	go func() {
-        err := s.apiServer.ListenAndServe()
-        if err!= nil {
-            glog.Fatalf("apiServer::ListenAndServe - Error: %+v", err)
-        }
-    }()
+		err := s.apiServer.ListenAndServe()
+		if err != nil {
+			glog.Fatalf("apiServer::ListenAndServe - Error: %+v", err)
+		}
+	}()
 }
 
 func (s *GatewayService) Shutdown(signals chan os.Signal) {
