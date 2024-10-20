@@ -24,13 +24,13 @@ func init() {
 }
 
 // ------------------------------------------------------------------------------------------------
-type Services interface {
-	Install() error
+type ServicesInterface interface {
+	Install() error 
 	Start()
 	Shutdown(signals chan os.Signal)
 }
 
-func RunAppService(instance Services) {
+func RunAppService(instance ServicesInterface) {
 	defer glog.Flush()
 
 	// 1. Setup the runtime CPU
@@ -55,7 +55,6 @@ func RunAppService(instance Services) {
 
 	instance.Shutdown(signals)
 
-	// 6. Wait for the signal to shutdown
 	if enablePProf {
 		pprof.StopCPUProfile()
 	}
