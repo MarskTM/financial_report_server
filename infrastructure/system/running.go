@@ -18,7 +18,7 @@ var enablePProf bool
 func init() {
 	flag.Set("alsologtostderr", "true")
 	flag.Set("log_dir", "/data/logKingtalk")
-	flag.Set("v", "1")
+	flag.Set("v", "3")
 	enablePProf = *flag.Bool("pprof_enable", true, "Enable profiling")
 	flag.Parse()
 }
@@ -43,11 +43,12 @@ func RunAppService(instance ServicesInterface) {
 
 	// 3. Install the instance
 	if err := instance.Install(); err != nil {
-		glog.Fatalf("Error installing instance: %v", err)
+		glog.V(1).Infof("Error installing instance: %v", err)
 	}
 
 	// 4. Run the instance's loop
 	go instance.Start()
+	glog.V(2).Infof("go instance.Start(), successfully started)")
 
 	// 5. Handle signals for graceful shutdown
 	signals := make(chan os.Signal, 1)

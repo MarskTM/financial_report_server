@@ -10,25 +10,24 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/go-chi/jwtauth"
-
 	"github.com/golang/glog"
 )
 
-func LoadConfig(model interface{}) error {
-	switch configType := model.(type) {
+func LoadConfig(model interface{}) (data interface{}, err error) {
+	switch model.(type) {
 	case *env.GatewayConfig,
 		*env.DocumentConfig,
 		*env.AuthenConfig:
 
-		glog.V(3).Infoln("+ Loading configuration model: ", configType)
-		if _, err := toml.DecodeFile("config.toml", &model); err != nil {
+		if _, err := toml.DecodeFile("./config.toml", &model); err != nil {
 			fmt.Println("Error loading config file:", err)
-			return err
+			return nil, err
 		}
-		return nil
 
+		glog.V(1).Infof("load configuration for gateway successfully: %+v", model)
+		return model, nil
 	default:
-		return fmt.Errorf("unsupported model type: %T", model)
+		return nil, fmt.Errorf("unsupported model type: %T", model)
 	}
 }
 

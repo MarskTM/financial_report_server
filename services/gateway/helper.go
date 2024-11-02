@@ -7,5 +7,5 @@ import (
 
 func main() {
 	gatewayService := internal.NewGatewayService()
-	go system.RunAppService(gatewayService)
+	system.RunAppService(gatewayService)
 }

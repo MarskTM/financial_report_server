@@ -1,16 +1,15 @@
 package env
 
-
 // -----------------------------------------------------------------
 // gateway config
 type GatewayConfig struct {
-	Addr           string `json:"addr"`
-	ReadTimeout    int    `json:"read_timeout"`
-	WriteTimeout   int    `json:"write_timeout"`
-	MaxHeaderBytes int    `json:"max_header_bytes"`
+	Addr           string `json:"addr" toml:"addr"`
+	ReadTimeout    int    `json:"read_timeout" toml:"read_timeout"`
+	WriteTimeout   int    `json:"write_timeout" toml:"write_timeout"`
+	MaxHeaderBytes int    `json:"max_header_bytes" toml:"max_header_bytes"`
 
-	DB    *DBConfig
-	Redis *RedisConfig
+	DBConfig DBConfig    `json:"db_config" toml:"db_config"`
+	Redis    RedisConfig `json:"redis" toml:"redis"`
 }
 
 // authen config
@@ -32,19 +31,17 @@ type DocumentConfig struct {
 // ----------------------------------------------------------------
 // db config
 type DBConfig struct {
-	Host         string `json:"host"`
-	Port         int    `json:"port"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	Database     string `json:"database"`
-	IsMigratable bool   `json:"is_migratable"`
+	Host         string `json:"host" toml:"host"`
+	Port         int    `json:"port" toml:"port"`
+	Username     string `json:"username" toml:"username"`
+	Password     string `json:"password" toml:"password"`
+	Database     string `json:"database" toml:"database"`
+	IsMigratable bool   `json:"is_migratable" toml:"is_migratable"`
 }
 
 // redis config
 type RedisConfig struct {
-	Addr     string `json:"addr"`
-	Password string `json:"password"`
-	DB       int    `json:"db"`
+	Addr     string `json:"addr" toml:"addr"`
+	Password string `json:"password" toml:"password"`
+	DB       int    `json:"db" toml:"db"`
 }
-
-

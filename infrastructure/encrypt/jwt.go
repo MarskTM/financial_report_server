@@ -14,8 +14,8 @@ import (
 )
 
 var (
-	privatePath = "./private.pem"
-	publicPath  = "./public.pem"
+	privatePath = "../../infrastructure/encrypt/private.pem"
+	publicPath  = "../../infrastructure/encrypt/public.pem"
 
 	encodeAuth *jwtauth.JWTAuth
 	decodeAuth *jwtauth.JWTAuth
@@ -101,12 +101,12 @@ func RsaDecrypt(encrypt string) ([]byte, error) {
 	return rsa.DecryptPKCS1v15(rand.Reader, priv, cipherText)
 }
 
-// Load 
+// Load
 func init() {
 	// Init RSA key pair
 	loadAuthToken()
 
-	// 
+	//
 }
 
 // -------------------------------- Public func --------------------------------

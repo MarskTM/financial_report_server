@@ -4,13 +4,15 @@ import (
 	"net/http"
 
 	internalMiddel "github.com/MarskTM/financial_report_server/services/gateway/internal/middelwares"
+	"github.com/MarskTM/financial_report_server/services/gateway/internal/rpc"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
+	"google.golang.org/grpc"
 )
 
-func Router() http.Handler {
+func Router(grpcConnected map[string]*grpc.ClientConn) http.Handler {
 	r := chi.NewRouter()
 
 	// Sử dụng middleware cho router
@@ -29,6 +31,8 @@ func Router() http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	})
 	r.Use(cors.Handler)
+
+	controller := rpc.NewGatewayInterface(grpcConnected)
 
 	r.Route("/api/v1", func(router chi.Router) {
 
@@ -54,12 +58,12 @@ func Router() http.Handler {
 			})
 
 			protectRouter.Route("/basic-query", func(accessRouter chi.Router) {
-				accessRouter.Post("/", func(w http.ResponseWriter, r *http.Request) {})
-				accessRouter.Delete("/", func(w http.ResponseWriter, r *http.Request) {})
+				accessRouter.Post("/", controller.BasicQuery)
+				accessRouter.Delete("/", controller.BasicQuery)
 			})
 
 			protectRouter.Route("/advance-filter", func(accessRouter chi.Router) {
-				accessRouter.Post("/", func(w http.ResponseWriter, r *http.Request) {})
+				accessRouter.Post("/", controller.AdvancedFilter)
 			})
 
 			protectRouter.Route("/document", func(accessRouter chi.Router) {

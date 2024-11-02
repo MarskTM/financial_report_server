@@ -4,10 +4,10 @@ import (
 	"net"
 	"os"
 
+	"github.com/BurntSushi/toml"
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/MarskTM/financial_report_server/infrastructure/database"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
-	"github.com/MarskTM/financial_report_server/utils"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 )
@@ -38,12 +38,12 @@ func (s *DocumentService) Install() error {
 	glog.V(3).Infof("gateway::Initialize ..!")
 	// -----------------------------------------------------------------------------
 	// 1. Install configuration
-	err := utils.LoadConfig(&config)
-	if err != nil {
-		glog.V(1).Infof("gateway::Initialize - Error: %+v", err)
+	if _, err := toml.DecodeFile("./config.toml", &config); err != nil {
+		glog.V(1).Infof("(-) gateway::Initialize - Error: %+v", err)
 		return err
 	}
 
+	glog.V(1).Infof("(+) load configuration successfully!")
 	// 2. Install DAO
 	managerDao.ConnectDB(*config.DB, system.PostgresDB)
 

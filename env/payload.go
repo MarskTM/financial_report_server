@@ -13,8 +13,8 @@ type AdvanceFilterPayload struct {
 }
 
 type BasicQueryPayload struct {
-	ModelType string      `json:"modelType"`
-	Data      interface{} `json:"data"`
+	Contructor string      `json:"contructor"`
+	Data       interface{} `json:"data"`
 }
 
 type ListModelId struct {

@@ -66,3 +66,4 @@ func GetRootPath() string {
 func GetPublicPath() string {
 	return GetRootPath() + "/public"
 }
+

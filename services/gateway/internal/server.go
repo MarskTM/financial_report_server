@@ -5,11 +5,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/MarskTM/financial_report_server/infrastructure/database"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
-	"github.com/MarskTM/financial_report_server/services/gateway/internal/rpc"
-	"github.com/MarskTM/financial_report_server/utils"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 
@@ -28,40 +27,33 @@ var (
 type GatewayService struct {
 	apiServer *http.Server
 	server    *grpc.Server
-	impl      *rpc.GatewayImpl
 
 	// ----------------------------------------------------------------
-	documentClient *grpc.ClientConn
+	clientConnection map[string]*grpc.ClientConn
 }
 
 // Constructor creates a new GatewayServer
 func NewGatewayService() system.ServicesInterface {
-	return &GatewayService{}
+	return &GatewayService{
+		clientConnection: make(map[string]*grpc.ClientConn),
+	}
 }
 
 // -----------------------------------------------------------------------------
 // service interface
 func (s *GatewayService) Install() error {
-
-	glog.V(3).Infof("gateway::Initialize ..!")
+	glog.V(1).Infof(">>> gateway::Initialize ..!")
 	// -----------------------------------------------------------------------------
 	// 1. Install configuration
-	err := utils.LoadConfig(&config)
-	if err != nil {
-		glog.V(1).Infof("gateway::Initialize - Error: %+v", err)
+	if _, err := toml.DecodeFile("./config.toml", &config); err != nil {
+		glog.V(1).Infof("(-) gateway::Initialize - Error: %+v", err)
 		return err
 	}
 
-	// 2. Install DAO
-	managerDao.ConnectDB(*config.DB, system.PostgresDB)
+	glog.V(1).Infof("(+) load configuration for gateway successfully!")
 
-	// 4. Install server
-	s.apiServer = &http.Server{
-		Addr:         config.Addr,
-		Handler:      Router(),
-		ReadTimeout:  time.Duration(config.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(config.WriteTimeout) * time.Second,
-	}
+	// 2. Install DAO
+	managerDao.ConnectDB(config.DBConfig, system.PostgresDB)
 
 	// 3. Install gRPC client
 	conn, err := grpc.Dial(configDocument.URL, grpc.WithInsecure())
@@ -69,10 +61,20 @@ func (s *GatewayService) Install() error {
 		glog.Error("Failed to connect: %v", err)
 	}
 	defer conn.Close()
-	// s.documentClient = pb.NewDocumentClient(document.)
+
+	// 4. Install gRPC client
+	// clientConnection["document"] = pb.NewDocumentClient(document.)
+	// clientConnection["biz_server"] = pb.New
 
 	// 4. Install gRPC server
 
+	// 5. Install HTTP server
+	s.apiServer = &http.Server{
+		Addr:         config.Addr,
+		Handler:      Router(s.clientConnection),
+		ReadTimeout:  time.Duration(config.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(config.WriteTimeout) * time.Second,
+	}
 
 	return nil
 }
