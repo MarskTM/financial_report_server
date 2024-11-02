@@ -3,6 +3,8 @@ version: "3.3"
 services:
   # Services layer
   biz_service:
+    build: ./services/biz_service
+
     depends_on:
       - analytics_service
       - auth_service
@@ -11,15 +13,6 @@ services:
       - financial_report_backend
 
   analytics_service:
-    depends_on:
-      - database
-      - redis_cache
-      - kafka_service
-      - etcd_servivce
-    networks:
-      - financial_report_backend
-
-  auth_service:
     depends_on:
       - database
       - redis_cache
