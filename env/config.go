@@ -8,8 +8,16 @@ type GatewayConfig struct {
 	WriteTimeout   int    `json:"write_timeout" toml:"write_timeout"`
 	MaxHeaderBytes int    `json:"max_header_bytes" toml:"max_header_bytes"`
 
-	DBConfig DBConfig    `json:"db_config" toml:"db_config"`
-	Redis    RedisConfig `json:"redis" toml:"redis"`
+	DBConfig DBConfig    `json:"db_config"`
+	Redis    RedisConfig `json:"redis"`
+}
+
+// biz server config
+type BizServerConfig struct {
+	Addr string `json:"addr" toml:"addr"`
+
+	DB    *DBConfig
+	Redis *RedisConfig
 }
 
 // authen config

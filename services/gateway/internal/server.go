@@ -49,16 +49,16 @@ func (s *GatewayService) Install() error {
 		glog.V(1).Infof("(-) gateway::Initialize - Error: %+v", err)
 		return err
 	}
-
-	glog.V(1).Infof("(+) load configuration for gateway successfully!")
+	glog.V(1).Infoln("(+) load configuration for gateway successfully!")
 
 	// 2. Install DAO
 	managerDao.ConnectDB(config.DBConfig, system.PostgresDB)
+	glog.V(1).Infoln("(+) Install Database successfully!")
 
 	// 3. Install gRPC client
 	conn, err := grpc.Dial(configDocument.URL, grpc.WithInsecure())
 	if err != nil {
-		glog.Error("Failed to connect: %v", err)
+		glog.Error("(-) Failed to connect: ", err)
 	}
 	defer conn.Close()
 

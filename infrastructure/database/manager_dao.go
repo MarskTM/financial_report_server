@@ -23,6 +23,8 @@ func (m *ManagerDBDao) ConnectDB(env env.DBConfig, dbType string) error {
 	switch dbType {
 	case system.PostgresDB:
 		dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Ho_Chi_Minh", env.Host, env.Username, env.Password, env.Database, env.Port)
+
+		// glog.V(1).Infof("(+) gateway::DB - Error: %s", dns)
 		m.postgre_sql, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
 
 	case system.MysqlDB:

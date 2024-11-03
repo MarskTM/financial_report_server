@@ -1,4 +1,3 @@
-
 addr = "localhost:3333"
 read_timeout = 30
 write_timeout = 30
@@ -8,9 +7,10 @@ max_header_bytes = 1048576
 [DBConfig]
 host = "localhost"
 port = 5432
-user = "postgres"
-password = "your_password"
-dbname = "my_database"
+username = "postgres"
+password = "147563"
+database = "database_report"
+is_migratable = false
 
 [Redis]
 addr = "localhost:6379"

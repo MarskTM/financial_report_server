@@ -35,7 +35,7 @@ func Router(grpcConnected map[string]*grpc.ClientConn) http.Handler {
 	controller := rpc.NewGatewayInterface(grpcConnected)
 
 	r.Route("/api/v1", func(router chi.Router) {
-
+		// Ping the API server
 		router.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("pong"))
 		})
@@ -49,8 +49,8 @@ func Router(grpcConnected map[string]*grpc.ClientConn) http.Handler {
 
 		// Protected routes with JWT token authentication
 		router.Group(func(protectRouter chi.Router) {
-			router.Use(jwtauth.Authenticator)
-			router.Use(internalMiddel.Authenticator)
+			protectRouter.Use(jwtauth.Authenticator)
+			protectRouter.Use(internalMiddel.Authenticator)
 
 			protectRouter.Route("/users", func(userRouter chi.Router) {
 				userRouter.Put("/reset-password", func(w http.ResponseWriter, r *http.Request) {})

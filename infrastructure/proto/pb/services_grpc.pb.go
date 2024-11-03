@@ -19,141 +19,107 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Document_UploadFile_FullMethodName   = "/pb.Document/UploadFile"
-	Document_DownloadFile_FullMethodName = "/pb.Document/DownloadFile"
+	AccessRequest_Authenticate_FullMethodName = "/pb.AccessRequest/Authenticate"
 )
 
-// DocumentClient is the client API for Document service.
+// AccessRequestClient is the client API for AccessRequest service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // >> Document rpc...
-type DocumentClient interface {
-	UploadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunk, UploadStatus], error)
-	DownloadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[FileChunk], error)
+type AccessRequestClient interface {
+	Authenticate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
-type documentClient struct {
+type accessRequestClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDocumentClient(cc grpc.ClientConnInterface) DocumentClient {
-	return &documentClient{cc}
+func NewAccessRequestClient(cc grpc.ClientConnInterface) AccessRequestClient {
+	return &accessRequestClient{cc}
 }
 
-func (c *documentClient) UploadFile(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[FileChunk, UploadStatus], error) {
+func (c *accessRequestClient) Authenticate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*AuthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Document_ServiceDesc.Streams[0], Document_UploadFile_FullMethodName, cOpts...)
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, AccessRequest_Authenticate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[FileChunk, UploadStatus]{ClientStream: stream}
-	return x, nil
+	return out, nil
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Document_UploadFileClient = grpc.ClientStreamingClient[FileChunk, UploadStatus]
-
-func (c *documentClient) DownloadFile(ctx context.Context, in *FileRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[FileChunk], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Document_ServiceDesc.Streams[1], Document_DownloadFile_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[FileRequest, FileChunk]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Document_DownloadFileClient = grpc.ServerStreamingClient[FileChunk]
-
-// DocumentServer is the server API for Document service.
-// All implementations must embed UnimplementedDocumentServer
+// AccessRequestServer is the server API for AccessRequest service.
+// All implementations must embed UnimplementedAccessRequestServer
 // for forward compatibility.
 //
 // >> Document rpc...
-type DocumentServer interface {
-	UploadFile(grpc.ClientStreamingServer[FileChunk, UploadStatus]) error
-	DownloadFile(*FileRequest, grpc.ServerStreamingServer[FileChunk]) error
-	mustEmbedUnimplementedDocumentServer()
+type AccessRequestServer interface {
+	Authenticate(context.Context, *Credentials) (*AuthResponse, error)
+	mustEmbedUnimplementedAccessRequestServer()
 }
 
-// UnimplementedDocumentServer must be embedded to have
+// UnimplementedAccessRequestServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedDocumentServer struct{}
+type UnimplementedAccessRequestServer struct{}
 
-func (UnimplementedDocumentServer) UploadFile(grpc.ClientStreamingServer[FileChunk, UploadStatus]) error {
-	return status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
+func (UnimplementedAccessRequestServer) Authenticate(context.Context, *Credentials) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
 }
-func (UnimplementedDocumentServer) DownloadFile(*FileRequest, grpc.ServerStreamingServer[FileChunk]) error {
-	return status.Errorf(codes.Unimplemented, "method DownloadFile not implemented")
-}
-func (UnimplementedDocumentServer) mustEmbedUnimplementedDocumentServer() {}
-func (UnimplementedDocumentServer) testEmbeddedByValue()                  {}
+func (UnimplementedAccessRequestServer) mustEmbedUnimplementedAccessRequestServer() {}
+func (UnimplementedAccessRequestServer) testEmbeddedByValue()                       {}
 
-// UnsafeDocumentServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to DocumentServer will
+// UnsafeAccessRequestServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AccessRequestServer will
 // result in compilation errors.
-type UnsafeDocumentServer interface {
-	mustEmbedUnimplementedDocumentServer()
+type UnsafeAccessRequestServer interface {
+	mustEmbedUnimplementedAccessRequestServer()
 }
 
-func RegisterDocumentServer(s grpc.ServiceRegistrar, srv DocumentServer) {
-	// If the following call pancis, it indicates UnimplementedDocumentServer was
+func RegisterAccessRequestServer(s grpc.ServiceRegistrar, srv AccessRequestServer) {
+	// If the following call pancis, it indicates UnimplementedAccessRequestServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Document_ServiceDesc, srv)
+	s.RegisterService(&AccessRequest_ServiceDesc, srv)
 }
 
-func _Document_UploadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(DocumentServer).UploadFile(&grpc.GenericServerStream[FileChunk, UploadStatus]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Document_UploadFileServer = grpc.ClientStreamingServer[FileChunk, UploadStatus]
-
-func _Document_DownloadFile_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(FileRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _AccessRequest_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Credentials)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(DocumentServer).DownloadFile(m, &grpc.GenericServerStream[FileRequest, FileChunk]{ServerStream: stream})
+	if interceptor == nil {
+		return srv.(AccessRequestServer).Authenticate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccessRequest_Authenticate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccessRequestServer).Authenticate(ctx, req.(*Credentials))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type Document_DownloadFileServer = grpc.ServerStreamingServer[FileChunk]
-
-// Document_ServiceDesc is the grpc.ServiceDesc for Document service.
+// AccessRequest_ServiceDesc is the grpc.ServiceDesc for AccessRequest service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Document_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.Document",
-	HandlerType: (*DocumentServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams: []grpc.StreamDesc{
+var AccessRequest_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.AccessRequest",
+	HandlerType: (*AccessRequestServer)(nil),
+	Methods: []grpc.MethodDesc{
 		{
-			StreamName:    "UploadFile",
-			Handler:       _Document_UploadFile_Handler,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "DownloadFile",
-			Handler:       _Document_DownloadFile_Handler,
-			ServerStreams: true,
+			MethodName: "Authenticate",
+			Handler:    _AccessRequest_Authenticate_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "services.proto",
 }

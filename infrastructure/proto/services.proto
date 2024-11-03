@@ -4,24 +4,19 @@ package pb;
 
 option go_package = "./pb";
 
-// ------------------------------- Document ---------------------------------
-message FileChunk {
-    bytes content = 1;
+// ------------------------------- User Access ---------------------------------
+message Credentials {
+    int32 uuid = 4;
+    string username = 1;
+    string password = 2;
 }
 
-message UploadStatus {
-    int32 total_size = 1;
-    int32 uploaded_size = 2;
-    string message = 3; 
-    bool success = 4;
-}
-
-message FileRequest  {
-    string filename = 1;
+message AuthResponse {
+    bool authenticated = 1;
+    repeated string roles = 2;
 }
 
 // >> Document rpc...
-service Document {
-    rpc UploadFile (stream FileChunk) returns (UploadStatus);
-    rpc DownloadFile (FileRequest) returns (stream FileChunk);
+service AccessRequest {
+    rpc Authenticate(Credentials) returns (AuthResponse) {}
 }
