@@ -7,11 +7,10 @@ import (
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/MarskTM/financial_report_server/utils"
 	"github.com/go-chi/render"
-	"google.golang.org/grpc"
 )
 
 type gatewayController struct {
-	grpcConnected map[string]*grpc.ClientConn
+	mapClient map[string]interface{}
 }
 
 type GatewayController interface {
@@ -81,8 +80,8 @@ func (c *gatewayController) AdvancedFilter(w http.ResponseWriter, r *http.Reques
 	return
 }
 
-func NewGatewayInterface(grpcConnected map[string]*grpc.ClientConn) GatewayController {
+func NewGatewayInterface(mapClient map[string]interface{}) GatewayController {
 	return &gatewayController{
-		grpcConnected: grpcConnected,
+		mapClient: mapClient,
 	}
 }

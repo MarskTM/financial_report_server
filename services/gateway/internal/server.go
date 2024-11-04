@@ -9,6 +9,8 @@ import (
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/MarskTM/financial_report_server/infrastructure/database"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
+	biz_client "github.com/MarskTM/financial_report_server/services/biz_server/client"
+	doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 
@@ -29,13 +31,13 @@ type GatewayService struct {
 	server    *grpc.Server
 
 	// ----------------------------------------------------------------
-	clientConnection map[string]*grpc.ClientConn
+	clientConnection map[string]interface{}
 }
 
 // Constructor creates a new GatewayServer
 func NewGatewayService() system.ServicesInterface {
 	return &GatewayService{
-		clientConnection: make(map[string]*grpc.ClientConn),
+		clientConnection: make(map[string]interface{}),
 	}
 }
 
@@ -56,15 +58,8 @@ func (s *GatewayService) Install() error {
 	glog.V(1).Infoln("(+) Install Database successfully!")
 
 	// 3. Install gRPC client
-	conn, err := grpc.Dial(configDocument.URL, grpc.WithInsecure())
-	if err != nil {
-		glog.Error("(-) Failed to connect: ", err)
-	}
-	defer conn.Close()
-
-	// 4. Install gRPC client
-	// clientConnection["document"] = pb.NewDocumentClient(document.)
-	// clientConnection["biz_server"] = pb.New
+	s.clientConnection["document"] = doc_client.NewDocumentClient()
+	s.clientConnection["biz_server"] = biz_client.NewBizClient()
 
 	// 4. Install gRPC server
 

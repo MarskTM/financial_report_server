@@ -19,105 +19,105 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccessRequest_Authenticate_FullMethodName = "/pb.AccessRequest/Authenticate"
+	BizService_Authenticate_FullMethodName = "/pb.BizService/Authenticate"
 )
 
-// AccessRequestClient is the client API for AccessRequest service.
+// BizServiceClient is the client API for BizService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// >> Document rpc...
-type AccessRequestClient interface {
+// Biz server
+type BizServiceClient interface {
 	Authenticate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
-type accessRequestClient struct {
+type bizServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAccessRequestClient(cc grpc.ClientConnInterface) AccessRequestClient {
-	return &accessRequestClient{cc}
+func NewBizServiceClient(cc grpc.ClientConnInterface) BizServiceClient {
+	return &bizServiceClient{cc}
 }
 
-func (c *accessRequestClient) Authenticate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*AuthResponse, error) {
+func (c *bizServiceClient) Authenticate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*AuthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AuthResponse)
-	err := c.cc.Invoke(ctx, AccessRequest_Authenticate_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, BizService_Authenticate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AccessRequestServer is the server API for AccessRequest service.
-// All implementations must embed UnimplementedAccessRequestServer
+// BizServiceServer is the server API for BizService service.
+// All implementations must embed UnimplementedBizServiceServer
 // for forward compatibility.
 //
-// >> Document rpc...
-type AccessRequestServer interface {
+// Biz server
+type BizServiceServer interface {
 	Authenticate(context.Context, *Credentials) (*AuthResponse, error)
-	mustEmbedUnimplementedAccessRequestServer()
+	mustEmbedUnimplementedBizServiceServer()
 }
 
-// UnimplementedAccessRequestServer must be embedded to have
+// UnimplementedBizServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAccessRequestServer struct{}
+type UnimplementedBizServiceServer struct{}
 
-func (UnimplementedAccessRequestServer) Authenticate(context.Context, *Credentials) (*AuthResponse, error) {
+func (UnimplementedBizServiceServer) Authenticate(context.Context, *Credentials) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
 }
-func (UnimplementedAccessRequestServer) mustEmbedUnimplementedAccessRequestServer() {}
-func (UnimplementedAccessRequestServer) testEmbeddedByValue()                       {}
+func (UnimplementedBizServiceServer) mustEmbedUnimplementedBizServiceServer() {}
+func (UnimplementedBizServiceServer) testEmbeddedByValue()                    {}
 
-// UnsafeAccessRequestServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AccessRequestServer will
+// UnsafeBizServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BizServiceServer will
 // result in compilation errors.
-type UnsafeAccessRequestServer interface {
-	mustEmbedUnimplementedAccessRequestServer()
+type UnsafeBizServiceServer interface {
+	mustEmbedUnimplementedBizServiceServer()
 }
 
-func RegisterAccessRequestServer(s grpc.ServiceRegistrar, srv AccessRequestServer) {
-	// If the following call pancis, it indicates UnimplementedAccessRequestServer was
+func RegisterBizServiceServer(s grpc.ServiceRegistrar, srv BizServiceServer) {
+	// If the following call pancis, it indicates UnimplementedBizServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&AccessRequest_ServiceDesc, srv)
+	s.RegisterService(&BizService_ServiceDesc, srv)
 }
 
-func _AccessRequest_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BizService_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Credentials)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AccessRequestServer).Authenticate(ctx, in)
+		return srv.(BizServiceServer).Authenticate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AccessRequest_Authenticate_FullMethodName,
+		FullMethod: BizService_Authenticate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccessRequestServer).Authenticate(ctx, req.(*Credentials))
+		return srv.(BizServiceServer).Authenticate(ctx, req.(*Credentials))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// AccessRequest_ServiceDesc is the grpc.ServiceDesc for AccessRequest service.
+// BizService_ServiceDesc is the grpc.ServiceDesc for BizService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var AccessRequest_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.AccessRequest",
-	HandlerType: (*AccessRequestServer)(nil),
+var BizService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.BizService",
+	HandlerType: (*BizServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Authenticate",
-			Handler:    _AccessRequest_Authenticate_Handler,
+			Handler:    _BizService_Authenticate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

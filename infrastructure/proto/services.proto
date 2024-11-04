@@ -16,7 +16,7 @@ message AuthResponse {
     repeated string roles = 2;
 }
 
-// >> Document rpc...
-service AccessRequest {
+// Biz server
+service BizService {
     rpc Authenticate(Credentials) returns (AuthResponse) {}
 }

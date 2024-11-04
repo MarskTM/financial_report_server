@@ -57,7 +57,7 @@ func (s *DocumentService) Install() error {
 
 func (s *DocumentService) Start() {
 	go func() {
-		lis, err := net.Listen("tcp", config.URL)
+		lis, err := net.Listen("tcp", config.Addr)
 		if err != nil {
 			glog.Errorf("Failed to listen: %v", err)
 		}

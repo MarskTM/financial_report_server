@@ -9,10 +9,9 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
-	"google.golang.org/grpc"
 )
 
-func Router(grpcConnected map[string]*grpc.ClientConn) http.Handler {
+func Router(clientConnection map[string]interface{}) http.Handler {
 	r := chi.NewRouter()
 
 	// Sử dụng middleware cho router
@@ -32,7 +31,7 @@ func Router(grpcConnected map[string]*grpc.ClientConn) http.Handler {
 	})
 	r.Use(cors.Handler)
 
-	controller := rpc.NewGatewayInterface(grpcConnected)
+	controller := rpc.NewGatewayInterface(clientConnection)
 
 	r.Route("/api/v1", func(router chi.Router) {
 		// Ping the API server

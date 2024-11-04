@@ -22,7 +22,7 @@ type BizServerConfig struct {
 
 // authen config
 type AuthenConfig struct {
-	URL string `json:"url"`
+	Addr string `json:"addr" toml:"addr"`
 
 	DB    *DBConfig
 	Redis *RedisConfig
@@ -30,7 +30,7 @@ type AuthenConfig struct {
 
 //  document config
 type DocumentConfig struct {
-	URL string `json:"url"`
+	Addr string `json:"addr" toml:"addr"`
 
 	DB    *DBConfig
 	Redis *RedisConfig
