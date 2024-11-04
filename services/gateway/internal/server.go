@@ -54,7 +54,7 @@ func (s *GatewayService) Install() error {
 	glog.V(1).Infoln("(+) load configuration for gateway successfully!")
 
 	// 2. Install DAO
-	managerDao.ConnectDB(config.DBConfig, system.PostgresDB)
+	managerDao.ConnectDB(config.DBConfig, env.PostgresType)
 	glog.V(1).Infoln("(+) Install Database successfully!")
 
 	// 3. Install gRPC client

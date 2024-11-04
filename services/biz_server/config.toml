@@ -1,7 +1,4 @@
-addr = "localhost:3333"
-read_timeout = 30
-write_timeout = 30
-max_header_bytes = 1048576
+addr = "localhost:3334"
 
 # current user only postgres
 [DBConfig]

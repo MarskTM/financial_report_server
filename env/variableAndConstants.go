@@ -1,4 +1,4 @@
-package env 
+package env
 
 // ----------------------------------------------------------------
 var (
@@ -7,10 +7,13 @@ var (
 	DefaultPassword        = "phenikaa@123"
 )
 
+var (
+	// DB Type
+	PostgresType = "postgres"
+	MysqlType    = "mysql"
+)
 
-
-var MapModelType = map[string]interface{}{
-}
+var MapModelType = map[string]interface{}{}
 
 var MapAssociation = map[string]map[string]interface{}{ // Alown preload association 2 level model
 	"users": {

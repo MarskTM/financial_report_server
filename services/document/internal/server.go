@@ -45,7 +45,7 @@ func (s *DocumentService) Install() error {
 
 	glog.V(1).Infof("(+) load configuration successfully!")
 	// 2. Install DAO
-	managerDao.ConnectDB(*config.DB, system.PostgresDB)
+	managerDao.ConnectDB(config.DBConfig, env.PostgresType)
 
 	// 3. Install gRPC client
 

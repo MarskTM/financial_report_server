@@ -16,24 +16,24 @@ type GatewayConfig struct {
 type BizServerConfig struct {
 	Addr string `json:"addr" toml:"addr"`
 
-	DB    *DBConfig
-	Redis *RedisConfig
+	DBConfig DBConfig    `json:"db_config"`
+	Redis    RedisConfig `json:"redis"`
 }
 
 // authen config
 type AuthenConfig struct {
 	Addr string `json:"addr" toml:"addr"`
 
-	DB    *DBConfig
-	Redis *RedisConfig
+	DBConfig DBConfig    `json:"db_config"`
+	Redis    RedisConfig `json:"redis"`
 }
 
 //  document config
 type DocumentConfig struct {
 	Addr string `json:"addr" toml:"addr"`
 
-	DB    *DBConfig
-	Redis *RedisConfig
+	DBConfig DBConfig    `json:"db_config"`
+	Redis    RedisConfig `json:"redis"`
 }
 
 // ----------------------------------------------------------------

@@ -1,3 +1,6 @@
+// File này định nghĩa một trình tự khỏi động cho các tác vụ của một service khi được khởi chạy.
+// Hiện tai chưa cần sử dụng pprof_enable để tiến hành tối ưu việc phân bổ bộ nhớ.
+
 package system
 
 import (
@@ -25,7 +28,7 @@ func init() {
 
 // ------------------------------------------------------------------------------------------------
 type ServicesInterface interface {
-	Install() error 
+	Install() error
 	Start()
 	Shutdown(signals chan os.Signal)
 }
