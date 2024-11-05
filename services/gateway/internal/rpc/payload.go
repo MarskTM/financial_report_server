@@ -1,4 +1,4 @@
-package env
+package rpc
 
 import "github.com/lib/pq"
 
@@ -20,17 +20,6 @@ type BasicQueryPayload struct {
 type ListModelId struct {
 	ID        []uint `gorm:"column:id"`
 	ModelType string `json:"modelType"`
-}
-
-// TokenDetail details for token authentication
-type TokenDetail struct {
-	Username     string
-	AccessToken  string
-	RefreshToken string
-	AccessUUID   string
-	RefreshUUID  string
-	AtExpires    int64
-	RtExpires    int64
 }
 
 // AccessDetail access detail only from token

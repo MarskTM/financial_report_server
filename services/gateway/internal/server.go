@@ -7,23 +7,15 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/MarskTM/financial_report_server/env"
-	"github.com/MarskTM/financial_report_server/infrastructure/database"
+	"github.com/MarskTM/financial_report_server/infrastructure/model"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
 	biz_client "github.com/MarskTM/financial_report_server/services/biz_server/client"
 	doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
-
-	"github.com/go-chi/jwtauth"
 )
 
-var (
-	config         env.GatewayConfig
-	configDocument env.DocumentConfig
-	managerDao     database.ManagerDBDao
-	DecodeAuth     *jwtauth.JWTAuth
-	EncodeAuth     *jwtauth.JWTAuth
-)
+var gatewayModel model.GatewayModel
 
 // ----------------------------------------------------------------
 type GatewayService struct {
@@ -47,28 +39,28 @@ func (s *GatewayService) Install() error {
 	glog.V(1).Infof(">>> gateway::Initialize ..!")
 	// -----------------------------------------------------------------------------
 	// 1. Install configuration
-	if _, err := toml.DecodeFile("./config.toml", &config); err != nil {
+	if _, err := toml.DecodeFile("./config.toml", &gatewayModel.Config); err != nil {
 		glog.V(1).Infof("(-) gateway::Initialize - Error: %+v", err)
 		return err
 	}
 	glog.V(1).Infoln("(+) load configuration for gateway successfully!")
 
 	// 2. Install DAO
-	managerDao.ConnectDB(config.DBConfig, env.PostgresType)
+	gatewayModel.ManagerDao.ConnectDB(gatewayModel.Config.DBConfig, env.PostgresType)
 	glog.V(1).Infoln("(+) Install Database successfully!")
 
 	// 3. Install gRPC client
-	s.clientConnection["document"] = doc_client.NewDocumentClient()
-	s.clientConnection["biz_server"] = biz_client.NewBizClient()
+	gatewayModel.DocsClient = doc_client.NewDocumentClient()
+	gatewayModel.BizClient = biz_client.NewBizClient()
 
 	// 4. Install gRPC server
 
 	// 5. Install HTTP server
 	s.apiServer = &http.Server{
-		Addr:         config.Addr,
-		Handler:      Router(s.clientConnection),
-		ReadTimeout:  time.Duration(config.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(config.WriteTimeout) * time.Second,
+		Addr:         gatewayModel.Config.Addr,
+		Handler:      Router(gatewayModel),
+		ReadTimeout:  time.Duration(gatewayModel.Config.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(gatewayModel.Config.WriteTimeout) * time.Second,
 	}
 
 	return nil

@@ -6,13 +6,23 @@ package model
 import (
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/MarskTM/financial_report_server/infrastructure/database"
+	"github.com/MarskTM/financial_report_server/infrastructure/proto/pb"
+	"github.com/go-chi/jwtauth"
 )
 
 type BizModel struct {
 	Config env.BizServerConfig
-	DB     database.ManagerDBDao
+	DB     database.ManagerDAO
 }
 
-type GatewayModel struct {}
+type GatewayModel struct {
+	Config     env.GatewayConfig
+	ManagerDao database.ManagerDAO
+	DecodeAuth *jwtauth.JWTAuth
+	EncodeAuth *jwtauth.JWTAuth
 
-type DocumentModel struct {}
+	DocsClient pb.DocumentClient
+	BizClient pb.BizServiceClient
+}
+
+type DocumentModel struct{}

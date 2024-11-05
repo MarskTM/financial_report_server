@@ -3,6 +3,7 @@ package internal
 import (
 	"net/http"
 
+	"github.com/MarskTM/financial_report_server/infrastructure/model"
 	internalMiddel "github.com/MarskTM/financial_report_server/services/gateway/internal/middelwares"
 	"github.com/MarskTM/financial_report_server/services/gateway/internal/rpc"
 	"github.com/go-chi/chi/v5"
@@ -11,7 +12,7 @@ import (
 	"github.com/go-chi/jwtauth"
 )
 
-func Router(clientConnection map[string]interface{}) http.Handler {
+func Router(gatewayModel model.GatewayModel) http.Handler {
 	r := chi.NewRouter()
 
 	// Sử dụng middleware cho router
@@ -31,7 +32,7 @@ func Router(clientConnection map[string]interface{}) http.Handler {
 	})
 	r.Use(cors.Handler)
 
-	controller := rpc.NewGatewayInterface(clientConnection)
+	controller := rpc.NewGatewayInterface(gatewayModel)
 
 	r.Route("/api/v1", func(router chi.Router) {
 		// Ping the API server

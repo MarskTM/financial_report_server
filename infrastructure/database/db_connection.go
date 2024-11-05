@@ -11,15 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type ManagerDBDao struct {
-	postgre_sql *gorm.DB
+type ManagerDAO struct {
+	Postgre *gorm.DB
 }
 
-func NewManagerDBDao() *ManagerDBDao {
-	return &ManagerDBDao{}
-}
-
-func (m *ManagerDBDao) ConnectDB(config env.DBConfig, dbType string) error {
+func (m *ManagerDAO) ConnectDB(config env.DBConfig, dbType string) error {
 	var err error
 
 	switch dbType {
@@ -27,7 +23,12 @@ func (m *ManagerDBDao) ConnectDB(config env.DBConfig, dbType string) error {
 		dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Ho_Chi_Minh", config.Host, config.Username, config.Password, config.Database, config.Port)
 
 		// glog.V(1).Infof("(+) gateway::DB - Error: %s", dns)
-		m.postgre_sql, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+		m.Postgre, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+
+		// Apply database migration
+		if config.IsMigratable {
+			m.Postgre.AutoMigrate()
+		}
 
 	case env.MysqlType:
 		// Implement MySQL connection logic here
@@ -35,11 +36,6 @@ func (m *ManagerDBDao) ConnectDB(config env.DBConfig, dbType string) error {
 
 	if err != nil {
 		panic("failed to connect database")
-	}
-
-	// Apply database migration
-	if config.IsMigratable {
-		m.postgre_sql.AutoMigrate()
 	}
 	return nil
 }

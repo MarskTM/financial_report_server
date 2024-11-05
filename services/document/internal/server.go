@@ -14,7 +14,7 @@ import (
 
 var (
 	config     env.DocumentConfig
-	managerDao database.ManagerDBDao
+	managerDao database.ManagerDAO
 )
 
 // ----------------------------------------------------------------

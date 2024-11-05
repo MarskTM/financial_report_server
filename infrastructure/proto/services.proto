@@ -6,14 +6,15 @@ option go_package = "./pb";
 
 // ------------------------------- User Access ---------------------------------
 message Credentials {
-    int32 uuid = 4;
     string username = 1;
     string password = 2;
 }
 
 message AuthResponse {
     bool authenticated = 1;
-    repeated string roles = 2;
+    int32 uuid = 2;
+    repeated string roles = 3;
+
 }
 
 // Biz server

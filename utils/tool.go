@@ -3,9 +3,6 @@ package utils
 import (
 	"context"
 	"fmt"
-	"net/http"
-	"net/url"
-	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/MarskTM/financial_report_server/env"
@@ -31,37 +28,7 @@ func LoadConfig(model interface{}) (data interface{}, err error) {
 	}
 }
 
-func SaveHttpCookie(fullDomain string, tokenDetail *env.TokenDetail, w http.ResponseWriter) error {
-	domain, err := url.Parse(fullDomain)
-	if err != nil {
-		return err
-	}
-
-	cookie_access := http.Cookie{
-		Name:     "AccessToken",
-		Domain:   domain.Hostname(),
-		Path:     "/",
-		Value:    tokenDetail.AccessToken,
-		HttpOnly: false,
-		Secure:   false,
-		Expires:  time.Now().Add(time.Hour * time.Duration(env.AccessTokenTime)),
-	}
-
-	cookie_refresh := http.Cookie{
-		Name:     "RefreshToken",
-		Domain:   domain.Hostname(),
-		Path:     "/",
-		Value:    tokenDetail.RefreshToken,
-		HttpOnly: false,
-		Secure:   false,
-		Expires:  time.Now().Add(time.Hour * time.Duration(env.RefreshTokenTime)),
-	}
-
-	http.SetCookie(w, &cookie_access)
-	http.SetCookie(w, &cookie_refresh)
-	return nil
-}
-
+// ------------------------------------------------------------------------------------------------
 func GetAndDecodeToken(token string, decodeAuth *jwtauth.JWTAuth) (map[string]interface{}, error) {
 	if token == "" {
 		return nil, nil
