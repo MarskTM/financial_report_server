@@ -41,7 +41,7 @@ func Router(gatewayModel model.GatewayModel) http.Handler {
 		})
 
 		// Public routes
-		router.Post("/login", func(w http.ResponseWriter, r *http.Request) {})
+		router.Post("/login", controller.Login)
 		router.Post("/logout", func(w http.ResponseWriter, r *http.Request) {})
 		router.Post("/refresh", func(w http.ResponseWriter, r *http.Request) {})
 		router.Post("/users/register", func(w http.ResponseWriter, r *http.Request) {})

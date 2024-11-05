@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/MarskTM/financial_report_server/env"
 	"github.com/MarskTM/financial_report_server/infrastructure/model"
+	"github.com/MarskTM/financial_report_server/infrastructure/proto/pb"
 	"github.com/MarskTM/financial_report_server/utils"
 	"github.com/go-chi/render"
 )
@@ -27,7 +29,24 @@ type GatewayController interface {
 }
 
 func (c *gatewayController) Login(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 
+	res, err := c.GateModel.BizClient.Authenticate(ctx, &pb.Credentials{
+		Username: "Kim Manh",
+		Password: "12345667",
+	})
+	if err != nil {
+		utils.UnauthorizedResponse(w, r, err)
+		return
+	}
+
+	response := utils.Response{
+		Data:    res,
+		Success: true,
+		Message: "Authenticated",
+	}
+	render.JSON(w, r, response)
 }
 
 func (c *gatewayController) Logout(w http.ResponseWriter, r *http.Request) {

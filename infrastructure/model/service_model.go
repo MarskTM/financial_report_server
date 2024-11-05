@@ -13,6 +13,9 @@ import (
 type BizModel struct {
 	Config env.BizServerConfig
 	DB     database.ManagerDAO
+
+	DocsClient    pb.DocumentClient
+	// AnalystClient pb.AnalystClient
 }
 
 type GatewayModel struct {
@@ -22,7 +25,7 @@ type GatewayModel struct {
 	EncodeAuth *jwtauth.JWTAuth
 
 	DocsClient pb.DocumentClient
-	BizClient pb.BizServiceClient
+	BizClient  pb.BizServiceClient
 }
 
 type DocumentModel struct{}

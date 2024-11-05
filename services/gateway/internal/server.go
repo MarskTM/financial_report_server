@@ -10,7 +10,7 @@ import (
 	"github.com/MarskTM/financial_report_server/infrastructure/model"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
 	biz_client "github.com/MarskTM/financial_report_server/services/biz_server/client"
-	doc_client "github.com/MarskTM/financial_report_server/services/document/client"
+	// doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 )
@@ -21,16 +21,11 @@ var gatewayModel model.GatewayModel
 type GatewayService struct {
 	apiServer *http.Server
 	server    *grpc.Server
-
-	// ----------------------------------------------------------------
-	clientConnection map[string]interface{}
 }
 
 // Constructor creates a new GatewayServer
 func NewGatewayService() system.ServicesInterface {
-	return &GatewayService{
-		clientConnection: make(map[string]interface{}),
-	}
+	return &GatewayService{}
 }
 
 // -----------------------------------------------------------------------------
@@ -50,10 +45,12 @@ func (s *GatewayService) Install() error {
 	glog.V(1).Infoln("(+) Install Database successfully!")
 
 	// 3. Install gRPC client
-	gatewayModel.DocsClient = doc_client.NewDocumentClient()
+	// gatewayModel.DocsClient = doc_client.NewDocumentClient()
 	gatewayModel.BizClient = biz_client.NewBizClient()
+	glog.V(1).Infof("(+) RegisterClient successfully!")
 
 	// 4. Install gRPC server
+	glog.V(1).Infof("(+) RegisterServer successfully!")
 
 	// 5. Install HTTP server
 	s.apiServer = &http.Server{
@@ -67,6 +64,7 @@ func (s *GatewayService) Install() error {
 }
 
 func (s *GatewayService) Start() {
+	glog.V(1).Infof("Biz_server::Start listening on %s", gatewayModel.Config.Addr)
 	go func() {
 		err := s.apiServer.ListenAndServe()
 		if err != nil {

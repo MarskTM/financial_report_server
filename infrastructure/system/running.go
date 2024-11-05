@@ -50,8 +50,8 @@ func RunAppService(instance ServicesInterface) {
 	}
 
 	// 4. Run the instance's loop
-	go instance.Start()
-	glog.V(2).Infof("go instance.Start(), successfully started)")
+	instance.Start()
+	// glog.V(2).Infof("go instance.Start(), successfully started)")
 
 	// 5. Handle signals for graceful shutdown
 	signals := make(chan os.Signal, 1)
