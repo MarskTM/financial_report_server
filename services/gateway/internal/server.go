@@ -75,5 +75,5 @@ func (s *GatewayService) Start() {
 
 func (s *GatewayService) Shutdown(signals chan os.Signal) {
 	<-signals
-	s.server.GracefulStop()
+	// s.server.GracefulStop()
 }
