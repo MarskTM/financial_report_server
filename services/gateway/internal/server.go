@@ -7,9 +7,12 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/MarskTM/financial_report_server/env"
+	"github.com/MarskTM/financial_report_server/infrastructure/cache"
+	"github.com/MarskTM/financial_report_server/infrastructure/encrypt"
 	"github.com/MarskTM/financial_report_server/infrastructure/model"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
 	biz_client "github.com/MarskTM/financial_report_server/services/biz_server/client"
+
 	// doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
@@ -38,6 +41,9 @@ func (s *GatewayService) Install() error {
 		glog.V(1).Infof("(-) gateway::Initialize - Error: %+v", err)
 		return err
 	}
+
+	gatewayModel.EncodeAuth = encrypt.GetEncodeAuth()
+	gatewayModel.DecodeAuth = encrypt.GetDecodeAuth()
 	glog.V(1).Infoln("(+) load configuration for gateway successfully!")
 
 	// 2. Install DAO
@@ -59,6 +65,9 @@ func (s *GatewayService) Install() error {
 		ReadTimeout:  time.Duration(gatewayModel.Config.ReadTimeout) * time.Second,
 		WriteTimeout: time.Duration(gatewayModel.Config.WriteTimeout) * time.Second,
 	}
+
+	// 6. Install Redis client
+	cache.ConnectRedis(gatewayModel.Config.Redis)
 
 	return nil
 }

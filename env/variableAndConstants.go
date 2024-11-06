@@ -1,10 +1,15 @@
 package env
 
+import "time"
+
 // ----------------------------------------------------------------
 var (
-	AccessTokenTime  int64 = 24
-	RefreshTokenTime int64 = 72
-	DefaultPassword        = "phenikaa@123"
+	ExtendHour        int64 = 720
+	ExtendRefreshHour int64 = 1440
+
+	CacheExpiresAt = 3 * time.Hour //
+
+	DefaultPassword = "phenikaa@123"
 )
 
 var (

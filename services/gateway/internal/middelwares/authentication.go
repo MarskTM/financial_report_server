@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/MarskTM/financial_report_server/infrastructure/cache"
 	"github.com/MarskTM/financial_report_server/infrastructure/encrypt"
-	redisV2 "github.com/MarskTM/financial_report_server/infrastructure/resdis"
 	"github.com/MarskTM/financial_report_server/utils"
+	"github.com/golang/glog"
 )
 
 func Authenticator(next http.Handler) http.Handler {
@@ -32,12 +33,18 @@ func Authenticator(next http.Handler) http.Handler {
 			return
 		}
 
-		if index, isExist := redisV2.FetchAuth(accessUuid); isExist != nil || index == 0 {
+		accessData, err := cache.FetchAuth(accessUuid)
+		if err != nil {
 			utils.UnauthorizedResponse(w, r, fmt.Errorf("Unauthorized"))
 			return
 		}
+
+		if accessData.Uuid == 0 || accessData.UserID == 0 {
+			glog.V(1).Info("(-) Unauthorized access data is empty")
+			utils.UnauthorizedResponse(w, r, fmt.Errorf("Unauthorized"))
+			return
+		}
+
 		next.ServeHTTP(w, r)
 	})
 }
-
-

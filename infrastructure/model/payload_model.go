@@ -1,4 +1,4 @@
-package rpc
+package model
 
 import "github.com/lib/pq"
 
@@ -56,4 +56,16 @@ type ForgotPasswordPayload struct {
 
 type EmailForgotPayload struct {
 	Email string `json:"email"`
+}
+
+
+// TokenDetail details for token authentication
+type TokenDetail struct {
+	Username     string
+	AccessToken  string
+	RefreshToken string
+	AccessUUID   string
+	RefreshUUID  string
+	AtExpires    int64
+	RtExpires    int64
 }

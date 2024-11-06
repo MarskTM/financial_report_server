@@ -11,9 +11,10 @@ message Credentials {
 }
 
 message AuthResponse {
-    bool authenticated = 1;
-    int32 uuid = 2;
-    repeated string roles = 3;
+    int32 session = 1;
+    int32 user_id = 2;
+    string usernames = 3;
+    repeated string roles = 4;
 
 }
 
