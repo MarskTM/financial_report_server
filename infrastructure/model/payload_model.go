@@ -17,17 +17,6 @@ type BasicQueryPayload struct {
 	Data       interface{} `json:"data"`
 }
 
-type ListModelId struct {
-	ID        []uint `gorm:"column:id"`
-	ModelType string `json:"modelType"`
-}
-
-// AccessDetail access detail only from token
-type AccessDetail struct {
-	AccessUUID string
-	UserID     int
-}
-
 // Payload for authentication
 type LoginPayload struct {
 	Username string `json:"username"`
@@ -35,12 +24,13 @@ type LoginPayload struct {
 }
 
 type RegisterPayload struct {
-	FullName string `json:"fullName"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	Code     string `json:"code"`
-	Phone    string `json:"phone"`
-	Birthday string `json:"birthday"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+	Email     string `json:"email"`
+	Birthday  string `json:"birthday"`
+	Phone     string `json:"phone"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }
 
 type ChangePasswordPayload struct {
@@ -58,7 +48,6 @@ type EmailForgotPayload struct {
 	Email string `json:"email"`
 }
 
-
 // TokenDetail details for token authentication
 type TokenDetail struct {
 	Username     string
@@ -68,4 +57,15 @@ type TokenDetail struct {
 	RefreshUUID  string
 	AtExpires    int64
 	RtExpires    int64
+}
+
+type ListModelId struct {
+	ID        []uint `gorm:"column:id"`
+	ModelType string `json:"modelType"`
+}
+
+// AccessDetail access detail only from token
+type AccessDetail struct {
+	AccessUUID string
+	UserID     int
 }

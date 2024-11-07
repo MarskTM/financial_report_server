@@ -16,6 +16,10 @@ var (
 	// DB Type
 	PostgresType = "postgres"
 	MysqlType    = "mysql"
+
+	// User role definitions based on role id
+	ClientType = 1
+	AdminType  = 2
 )
 
 var MapModelType = map[string]interface{}{}

@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -23,6 +24,9 @@ type GatewayController interface {
 	// access api
 	Login(w http.ResponseWriter, r *http.Request)
 	Logout(w http.ResponseWriter, r *http.Request)
+	Refresh(w http.ResponseWriter, r *http.Request)
+	Register(w http.ResponseWriter, r *http.Request)
+
 
 	// CRUD...
 	BasicQuery(w http.ResponseWriter, r *http.Request)
@@ -78,7 +82,62 @@ func (c *gatewayController) Login(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, response)
 }
 
-func (c *gatewayController) Logout(w http.ResponseWriter, r *http.Request) {
+func (c *gatewayController) Register(w http.ResponseWriter, r *http.Request) {
+	// TODO: Create new JWT token for user login the first time.
+	var payload model.RegisterPayload
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		utils.BadRequestResponse(w, r, err)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	res, err := c.GateModel.BizClient.Register(ctx, &pb.RegisterRequest{
+		Username:    payload.Username,
+		Password:    payload.Password,
+		Email:       payload.Email,
+		BirthDate:   payload.Birthday,
+		PhoneNumber: payload.Phone,
+		FirstName:   payload.FirstName,
+		LastName:    payload.LastName,
+	})
+	if err != nil {
+		utils.InternalServerErrorResponse(w, r, err)
+		return
+	}
+
+
+	if !res.Success {
+		utils.InternalServerErrorResponse(w, r, fmt.Errorf(res.Message))
+		return
+	}
+
+	tokenDetail, err := utils.CreateToken(res.Auth.Session, res.Auth.UserId, res.Auth.Usernames, res.Auth.Roles, c.GateModel.EncodeAuth)
+	if err != nil {
+		utils.InternalServerErrorResponse(w, r, err)
+		return
+	}
+
+	fullDomain := r.Header.Get("Origin")
+	errCookie := SaveHttpCookie(fullDomain, tokenDetail, w)
+	if errCookie != nil {
+		utils.InternalServerErrorResponse(w, r, err)
+		return
+	}
+
+	response := utils.Response{
+		Data: &model.LoginResponse{
+			ID:           uint(res.Auth.UserId),
+			Role:         res.Auth.Roles,
+			Username:     res.Auth.Usernames,
+			AccessToken:  tokenDetail.AccessToken,
+			RefreshToken: tokenDetail.RefreshToken,
+		},
+		Success: true,
+		Message: "Registration successful!",
+	}
+	render.JSON(w, r, response)
 
 }
 
@@ -151,6 +210,12 @@ func (c *gatewayController) Refresh(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, response)
 		return
 	}
+}
+
+func (c *gatewayController) Logout(w http.ResponseWriter, r *http.Request) {
+}
+
+func (c *gatewayController) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------

@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	BizService_Authenticate_FullMethodName = "/pb.BizService/Authenticate"
+	BizService_Register_FullMethodName     = "/pb.BizService/Register"
+	BizService_Logout_FullMethodName       = "/pb.BizService/Logout"
 )
 
 // BizServiceClient is the client API for BizService service.
@@ -29,6 +31,8 @@ const (
 // Biz server
 type BizServiceClient interface {
 	Authenticate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*AuthResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 }
 
 type bizServiceClient struct {
@@ -49,6 +53,26 @@ func (c *bizServiceClient) Authenticate(ctx context.Context, in *Credentials, op
 	return out, nil
 }
 
+func (c *bizServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, BizService_Register_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bizServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LogoutResponse)
+	err := c.cc.Invoke(ctx, BizService_Logout_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BizServiceServer is the server API for BizService service.
 // All implementations must embed UnimplementedBizServiceServer
 // for forward compatibility.
@@ -56,6 +80,8 @@ func (c *bizServiceClient) Authenticate(ctx context.Context, in *Credentials, op
 // Biz server
 type BizServiceServer interface {
 	Authenticate(context.Context, *Credentials) (*AuthResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	mustEmbedUnimplementedBizServiceServer()
 }
 
@@ -68,6 +94,12 @@ type UnimplementedBizServiceServer struct{}
 
 func (UnimplementedBizServiceServer) Authenticate(context.Context, *Credentials) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
+}
+func (UnimplementedBizServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedBizServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedBizServiceServer) mustEmbedUnimplementedBizServiceServer() {}
 func (UnimplementedBizServiceServer) testEmbeddedByValue()                    {}
@@ -108,6 +140,42 @@ func _BizService_Authenticate_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BizService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BizServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BizService_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BizServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BizService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BizServiceServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BizService_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BizServiceServer).Logout(ctx, req.(*LogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BizService_ServiceDesc is the grpc.ServiceDesc for BizService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -118,6 +186,14 @@ var BizService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Authenticate",
 			Handler:    _BizService_Authenticate_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _BizService_Register_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _BizService_Logout_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

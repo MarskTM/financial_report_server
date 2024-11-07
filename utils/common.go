@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/lithammer/shortuuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // GenerateKey using in set keys
@@ -45,16 +46,7 @@ func isMn(r rune) bool {
 	return unicode.Is(unicode.Mn, r) // Mn: nonspacing marks
 }
 
-// GenerateKey random password
-func GeneratePasswordKey(length int) (string, error) {
-	buffer := make([]byte, length)
-	_, err := rand.Read(buffer)
-	if err != nil {
-		return "", err
-	}
-	return base64.URLEncoding.EncodeToString(buffer)[:length], nil
-}
-
+// ---------------------------utils func suport for folder-------------------------------------
 func GetRootPath() string {
 	root, err := os.Getwd()
 	if err != nil {
@@ -67,3 +59,28 @@ func GetPublicPath() string {
 	return GetRootPath() + "/public"
 }
 
+// ----------------------------- utils func suport for authen password -----------------------------------
+func HashAndSalt(pwd string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), 14)
+	if err != nil {
+		glog.V(1).Info("HashAndSalt - err: ", err)
+	}
+	return string(hash)
+}
+
+func ComparePassword(hashedPwd string, plainPwd string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashedPwd), []byte(plainPwd)); err != nil {
+		return false
+	}
+	return true
+}
+
+// GenerateKey random password
+func GeneratePasswordKey(length int) (string, error) {
+	buffer := make([]byte, length)
+	_, err := rand.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(buffer)[:length], nil
+}

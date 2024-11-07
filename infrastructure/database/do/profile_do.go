@@ -7,7 +7,7 @@ import (
 )
 
 type Profile struct {
-	ID         int32  `json:"id"`
+	ID         int32  `json:"id" gorm:"primaryKey"`
 	UserID     int32  `json:"user_id"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`
@@ -17,7 +17,9 @@ type Profile struct {
 	Birthdate  string `json:"birthdate"`
 	OtherLinks string `json:"other_links"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-"`
+	User *User `json:"user" gorm:"foreignKey:UserID"`
+
+	CreatedAt time.Time      `json:"createdAt" swaggerignore:"true"`
+	DeletedAt gorm.DeletedAt `json:"-" swaggerignore:"true"`
+	UpdatedAt time.Time      `json:"updatedAt" swaggerignore:"true"`
 }

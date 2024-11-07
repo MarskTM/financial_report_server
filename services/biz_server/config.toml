@@ -7,7 +7,7 @@ port = 5432
 username = "postgres"
 password = "147563"
 database = "database_report"
-is_migratable = false
+is_migratable = true
 
 [Redis]
 addr = "localhost:6379"
