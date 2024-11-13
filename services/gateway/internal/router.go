@@ -72,7 +72,7 @@ func Router(gatewayModel model.GatewayModel) http.Handler {
 		})
 
 		router.Group(func(protectedRoute chi.Router) {
-			fs := http.StripPrefix("/api/v1/public", http.FileServer(http.Dir("")))
+			fs := http.StripPrefix("/api/v1/public", http.FileServer(http.Dir("../../../cdn/public")))
 			router.Get("/pnk_intern_storage/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				fs.ServeHTTP(w, r)
 			}))
