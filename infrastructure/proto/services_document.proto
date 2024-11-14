@@ -6,14 +6,13 @@ option go_package = "./pb";
 
 // ------------------------------- Document ---------------------------------
 message FileChunk {
-    bytes content = 1;
+    bytes content = 1; // Dữ liệu file được gửi theo từng chunk.
 }
 
 message UploadStatus {
-    int32 total_size = 1;
-    int32 uploaded_size = 2;
-    string message = 3; 
-    bool success = 4;
+    string filename = 1;
+    string message = 2; 
+    bool success = 3;
 }
 
 message FileRequest  {

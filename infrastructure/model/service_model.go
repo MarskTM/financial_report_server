@@ -14,7 +14,7 @@ type BizModel struct {
 	Config env.BizServerConfig
 	DB     database.ManagerDAO
 
-	DocsClient    pb.DocumentClient
+	DocsClient pb.DocumentClient
 	// AnalystClient pb.AnalystClient
 }
 
@@ -28,4 +28,9 @@ type GatewayModel struct {
 	BizClient  pb.BizServiceClient
 }
 
-type DocumentModel struct{}
+type DocumentModel struct {
+	Config env.DocumentConfig
+	DB     database.ManagerDAO
+
+	BizClient pb.BizServiceClient
+}

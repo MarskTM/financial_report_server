@@ -47,6 +47,11 @@ func Router(gatewayModel model.GatewayModel) http.Handler {
 		router.Post("/users/register", controller.Register)
 		router.Post("/users/forgot-password", func(w http.ResponseWriter, r *http.Request) {})
 
+		router.Route("/document", func(accessRouter chi.Router) {
+			accessRouter.Post("/upload", controller.UploadFile)
+			accessRouter.Post("/download", func(w http.ResponseWriter, r *http.Request) {})
+		})
+
 		// Protected routes with JWT token authentication
 		router.Group(func(protectRouter chi.Router) {
 			protectRouter.Use(jwtauth.Authenticator)
@@ -66,9 +71,10 @@ func Router(gatewayModel model.GatewayModel) http.Handler {
 				accessRouter.Post("/", controller.AdvancedFilter)
 			})
 
-			protectRouter.Route("/document", func(accessRouter chi.Router) {
-				accessRouter.Post("/", func(w http.ResponseWriter, r *http.Request) {})
-			})
+			// protectRouter.Route("/document", func(accessRouter chi.Router) {
+			// 	accessRouter.Post("/upload", controller.UploadFile)
+			// 	accessRouter.Post("/download", func(w http.ResponseWriter, r *http.Request) {})
+			// })
 		})
 
 		router.Group(func(protectedRoute chi.Router) {

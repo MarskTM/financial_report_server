@@ -12,8 +12,8 @@ import (
 	"github.com/MarskTM/financial_report_server/infrastructure/model"
 	"github.com/MarskTM/financial_report_server/infrastructure/system"
 	biz_client "github.com/MarskTM/financial_report_server/services/biz_server/client"
+	doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 
-	// doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 )
@@ -51,7 +51,7 @@ func (s *GatewayService) Install() error {
 	glog.V(1).Infoln("(+) Install Database successfully!")
 
 	// 3. Install gRPC client
-	// gatewayModel.DocsClient = doc_client.NewDocumentClient()
+	gatewayModel.DocsClient = doc_client.NewDocumentClient()
 	gatewayModel.BizClient = biz_client.NewBizClient()
 	glog.V(1).Infof("(+) RegisterClient successfully!")
 

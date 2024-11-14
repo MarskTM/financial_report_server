@@ -31,6 +31,10 @@ type GatewayController interface {
 	// CRUD...
 	BasicQuery(w http.ResponseWriter, r *http.Request)
 	AdvancedFilter(w http.ResponseWriter, r *http.Request)
+
+	// Document
+	UploadFile(w http.ResponseWriter, r *http.Request)
+	DownloadFile(w http.ResponseWriter, r *http.Request)
 }
 
 func (c *gatewayController) Login(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +142,6 @@ func (c *gatewayController) Register(w http.ResponseWriter, r *http.Request) {
 		Message: "Registration successful!",
 	}
 	render.JSON(w, r, response)
-
 }
 
 func (c *gatewayController) Refresh(w http.ResponseWriter, r *http.Request) {

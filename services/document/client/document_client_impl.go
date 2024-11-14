@@ -8,11 +8,11 @@ import (
 )
 
 func NewDocumentClient() pb.DocumentClient {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial("localhost:3335", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("Không thể kết nối đến gRPC server: %v", err)
 	}
-	defer conn.Close()
+	// defer conn.Close()
 
 	// Tạo client từ kết nối
 	DocumentClient := pb.NewDocumentClient(conn)

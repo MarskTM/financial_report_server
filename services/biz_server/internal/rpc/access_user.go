@@ -11,6 +11,7 @@ import (
 )
 
 func (s *BizService) Authenticate(ctx context.Context, req *pb.Credentials) (*pb.AuthResponse, error) {
+	glog.V(1).Info("Biz_service::Authenticate - request: %v", req)
 	if req.Username == "" {
 		err := fmt.Errorf("Error not found username for Authenticate!")
 		glog.V(1).Info(err)
@@ -35,6 +36,7 @@ func (s *BizService) Authenticate(ctx context.Context, req *pb.Credentials) (*pb
 }
 
 func (s *BizService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	glog.V(1).Info("Biz_service::Register - request: %v", req)
 	if req.Username == "" {
 		err := fmt.Errorf("Error not found username for RegisterClient!")
 		glog.V(1).Info(err)

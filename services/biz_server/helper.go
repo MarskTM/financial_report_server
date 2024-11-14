@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	bizServer := internal.NeBizService()
+	bizServer := internal.NewBizService()
 	system.RunAppService(bizServer)
 }

@@ -12,7 +12,7 @@ import (
 	"github.com/MarskTM/financial_report_server/services/biz_server/internal/rpc"
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
-	// doc_client "github.com/MarskTM/financial_report_server/services/document/client"
+	doc_client "github.com/MarskTM/financial_report_server/services/document/client"
 )
 
 var bizModel model.BizModel
@@ -40,7 +40,7 @@ func (s *BizService) Install() error {
 	glog.V(1).Infof("(+) Connected Database successfully!")
 
 	// 3. Install gRPC client
-	// bizModel.DocsClient = doc_client.NewDocumentClient()
+	bizModel.DocsClient = doc_client.NewDocumentClient()
 	glog.V(1).Infof("(+) RegisterClient successfully!")
 
 	// 4. Install gRPC server
@@ -70,7 +70,7 @@ func (s *BizService) Shutdown(signals chan os.Signal) {
 }
 
 // Constructor creates a new GatewayServer
-func NeBizService() system.ServicesInterface {
+func NewBizService() system.ServicesInterface {
 	return &BizService{
 		server: grpc.NewServer(),
 	}
