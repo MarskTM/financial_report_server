@@ -43,6 +43,11 @@ func (m *ManagerDAO) ConnectDB(config env.DBConfig, dbType string) error {
 				&do.User{},
 				&do.Profile{},
 				&do.UserRole{},
+
+				&do.Document{},
+				&do.Company{},
+				&do.SubCompanies{},
+				&do.CompanyManagements{},
 			)
 			glog.V(1).Infoln("(+) Done migrating database")
 		}

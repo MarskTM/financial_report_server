@@ -71,6 +71,11 @@ func (s *DocumentService) Start() {
 			glog.Errorf("Failed to serve gRPC Document: %v", err)
 		}
 	}()
+	
+	glog.V(1).Infof("Document_server::Started cron job")
+	go func ()  {
+		
+	}()
 }
 
 func (s *DocumentService) Shutdown(signals chan os.Signal) {
