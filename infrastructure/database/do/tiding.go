@@ -1,6 +1,6 @@
 package do
 
-type News struct {
+type Tiding struct {
 	ID int32 `json:"id"`
 	Title string `json:"title"`
 	Content string `json:"content"`

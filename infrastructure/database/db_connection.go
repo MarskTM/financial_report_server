@@ -46,8 +46,15 @@ func (m *ManagerDAO) ConnectDB(config env.DBConfig, dbType string) error {
 
 				&do.Document{},
 				&do.Company{},
-				&do.SubCompanies{},
-				&do.CompanyManagements{},
+				&do.SubCompany{},
+				&do.CompanyManagement{},
+				&do.CompanyTiding{},
+				&do.Shareholder{},
+
+				// &do.FinancialReport{},
+				// &do.BalanceSheet{},
+				// &do.IncomeStatement{},
+                // &do.CashFlowStatement{},
 			)
 			glog.V(1).Infoln("(+) Done migrating database")
 		}

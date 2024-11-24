@@ -23,6 +23,6 @@ message FileRequest  {
 
 // >> Document rpc...
 service Document {
-    rpc UploadFile (stream FileChunk, ) returns (UploadStatus);
+    rpc UploadFile (stream FileChunk) returns (UploadStatus);
     rpc DownloadFile (FileRequest) returns (stream FileChunk);
 }

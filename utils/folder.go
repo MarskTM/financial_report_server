@@ -1,5 +1,10 @@
 package utils
 
-func randomName() string {
+func RandomName() string {
 	return ""	
 }
+
+func UnixName() string {
+	return ""    
+}
+

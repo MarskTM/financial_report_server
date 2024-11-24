@@ -22,22 +22,20 @@ func (c *gatewayController) UploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Lấy trường "username" từ form
-	fileName := r.FormValue("file_name")
-	glog.V(1).Infoln("FileName:", fileName)
-
 	// Lấy file "profile_picture" từ form
-	file, _, err := r.FormFile("profile")
+	file, fileHeader, err := r.FormFile("profile")
 	if err != nil {
 		utils.BadRequestResponse(w, r, fmt.Errorf("Không thể lấy file từ form: %v", err))
 		return
 	}
 	defer file.Close()
 
+
+	glog.V(1).Infoln("FileName:", fileHeader.Filename)
 	// ------------------------------------------------------------------------------------------------
 
 	// Gọi hàm upload file qua gRPC
-	resp, errReps := uploadFileToDocumentService(c.GateModel.DocsClient, file)
+	resp, errReps := uploadFileToDocumentService(c.GateModel.DocsClient, file, fileHeader.Filename)
 	if errReps != nil {
 		utils.InternalServerErrorResponse(w, r, errReps)
 		return
@@ -52,10 +50,10 @@ func (c *gatewayController) UploadFile(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, response)
 }
 
-func (c *gatewayController) DownloadFile(w http.ResponseWriter, r *http.Request) {}
+func (c *gatewayController) Delete(w http.ResponseWriter, r *http.Request) {}
 
 // ------------------------------------------- Docunment Utils Function -----------------------------------------------------
-func uploadFileToDocumentService(client pb.DocumentClient, file io.Reader) (*pb.UploadStatus, error) {
+func uploadFileToDocumentService(client pb.DocumentClient, file io.Reader, fileName string) (*pb.UploadStatus, error) {
 	// Tạo stream để upload file
 	stream, err := client.UploadFile(context.Background())
 	if err != nil {
@@ -75,6 +73,7 @@ func uploadFileToDocumentService(client pb.DocumentClient, file io.Reader) (*pb.
 
 		// Gửi chunk qua gRPC
 		req := &pb.FileChunk{
+			FileName: fileName,
 			Content: buffer[:n],
 		}
 		if err := stream.Send(req); err != nil {
