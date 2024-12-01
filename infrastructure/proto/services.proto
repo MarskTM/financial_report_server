@@ -4,6 +4,27 @@ package pb;
 
 option go_package = "./pb";
 
+// --------------------------------- System Model--------------------------------
+message User {}
+
+message Profile {}
+
+message Tidign {}
+
+message Report {
+
+    BlanceSheet balance = 1;
+    IncomeStatement income = 2;
+    CashFlowStatement cash_flow = 3;
+}
+
+message BlanceSheet {}
+
+message IncomeStatement {}
+
+message CashFlowStatement {}
+
+
 // ------------------------------- User Access ---------------------------------
 message Credentials {
     string username = 1;
@@ -43,10 +64,23 @@ message LogoutResponse {
     string message = 2;
 }
 
+message ProfileRequest {
+    int32 session = 1;
+    int32 user_id = 2;
+}
+
+message ProfileResponse {
+    bool success = 1;
+    string message = 2;
+    UserProfile profile = 3;
+}
+
 
 // Biz server
 service BizService {
     rpc Authenticate(Credentials) returns (AuthResponse) {}
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
     rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+
+    rpc GetProfile()
 }

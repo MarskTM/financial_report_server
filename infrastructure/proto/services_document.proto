@@ -17,12 +17,21 @@ message UploadStatus {
     bool success = 4;
 }
 
-message FileRequest  {
-    string file_name = 1;
+message ImportFileData {
+    string file_path = 1;
+    string type = 2;
 }
+
+message ImportResult {
+    int32 report_id = 1;
+    string message = 2; 
+    bool success = 3;
+}
+
+
 
 // >> Document rpc...
 service Document {
     rpc UploadFile (stream FileChunk) returns (UploadStatus);
-    rpc DownloadFile (FileRequest) returns (stream FileChunk);
+    rpc ImportFinancialData (ImportFileData) returns (stream ImportResult);
 }
