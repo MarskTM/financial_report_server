@@ -84,3 +84,10 @@ func (s *BizService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb
 		},
 	}, nil
 }
+
+func (s *BizService) GetProfile(ctx context.Context, ) () {}
+
+func (s *BizService) UpdateProfile(ctx context.Context, ) () {}
+
+func (s *BizService) Authority(ctx context.Context, ) () {}
+

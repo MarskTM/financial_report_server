@@ -72,3 +72,6 @@ func (d *DocumentService) UploadFile(stream pb.Document_UploadFileServer) error 
 	})
 	return nil
 }
+
+func (s *DocumentService) ExportFinancialData() () {}
+
